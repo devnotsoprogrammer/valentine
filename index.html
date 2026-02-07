@@ -1,0 +1,1087 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>For Seerat</title>
+    <meta name="theme-color" content="#ff6fbf" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Satisfy&family=Playfair+Display:wght@500;600&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        overflow: hidden;
+        background: #0f0f0f;
+      }
+      .font-satisfy {
+        font-family: "Satisfy", cursive;
+      }
+      .font-playfair {
+        font-family: "Playfair Display", serif;
+      }
+      .page {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 1s;
+        padding: 1rem;
+        background-size: 200% 200%;
+        animation: bgShift 12s ease infinite;
+      }
+      @keyframes bgShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      @keyframes ringReveal {
+        0% {
+          opacity: 0;
+          transform: translateY(10px) scale(0.9);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .ring-soft {
+        animation: ringReveal 1.8s ease-out forwards;
+      }
+
+      .hidden {
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.96);
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(22px);
+        border-radius: 32px;
+        padding: 2rem 2.5rem;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
+        transition: 0.5s;
+        text-align: center;
+      }
+      button {
+        transition: 0.3s;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      button:hover {
+        transform: scale(1.05);
+      }
+      .caret::after {
+        content: "|";
+        animation: blink 1s infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      /* Layers */
+      .rain-layer,
+      .heart-layer,
+      .spark-layer,
+      .bubble-layer,
+      .petal-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .drop {
+        width: 2px;
+        height: 60px;
+        background: linear-gradient(transparent, rgba(170, 190, 255, 0.8));
+        position: absolute;
+        animation: fall linear infinite;
+      }
+      @keyframes fall {
+        to {
+          transform: translateY(160vh);
+        }
+      }
+      .heart {
+        position: absolute;
+        font-size: 24px;
+        animation: heartFall linear infinite;
+      }
+      @keyframes heartFall {
+        to {
+          transform: translateY(150vh) rotate(15deg);
+          opacity: 0;
+        }
+      }
+      .spark {
+        position: absolute;
+        font-size: 16px;
+        opacity: 0.9;
+        animation: sparkFall linear infinite;
+      }
+      @keyframes sparkFall {
+        to {
+          transform: translateY(120vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+      .bubble {
+        position: absolute;
+        font-size: 18px;
+        opacity: 0.6;
+        animation: bubbleRise linear infinite;
+      }
+      @keyframes bubbleRise {
+        to {
+          transform: translateY(-50vh);
+          opacity: 0;
+        }
+      }
+      .petal {
+        position: absolute;
+        font-size: 20px;
+        animation: petalFall linear infinite;
+      }
+      @keyframes petalFall {
+        to {
+          transform: translateY(150vh) rotate(360deg) scale(0.8);
+          opacity: 0;
+        }
+      }
+      .glow {
+        color: #fff;
+        text-shadow:
+          0 0 6px rgba(255, 160, 200, 0.6),
+          0 0 14px rgba(255, 160, 200, 0.4);
+      }
+
+      /* Dramatic Yes button heartbeat */
+      #yesBtn:hover {
+        animation: heartbeat 0.8s infinite;
+      }
+      @keyframes heartbeat {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        25%,
+        75% {
+          transform: scale(1.12);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      /* Floating hearts emitted dynamically */
+      .floating-heart {
+        position: absolute;
+        font-size: 24px;
+        z-index: 10;
+        pointer-events: none;
+        animation: floatUp linear forwards;
+      }
+      @keyframes floatUp {
+        to {
+          transform: translateY(-140px) scale(1.3);
+          opacity: 0;
+        }
+      }
+
+      /* Glow pulse effect for yes page and promise */
+      #page-yes,
+      /* Allow scrolling only on promises page */
+      #page-promises {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        align-items: flex-start; /* IMPORTANT */
+      }
+
+      /* Prevent center-lock on long content */
+      #page-promises > div {
+        width: 100%;
+      }
+
+      .promise-line {
+        line-height: 1.75;
+        letter-spacing: 0.01em;
+      }
+
+      @keyframes glowPulse {
+        0% {
+          filter: brightness(1);
+        }
+        50% {
+          filter: brightness(1.25);
+        }
+        100% {
+          filter: brightness(1);
+        }
+      }
+
+      /* Smooth dodge effect for No button */
+      #noBtn {
+        transition: transform 0.2s ease-in-out;
+        position: relative;
+      }
+
+      /* Playful message box */
+      #playfulMsg {
+        font-size: 1.2rem;
+        text-align: center;
+        color: #ff6fbf;
+        text-shadow: 0 0 6px #ff6fbf;
+        margin-top: 1rem;
+        transition: 0.3s;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- AUDIO -->
+    <audio id="audioFirst" src="./1.mp3" loop></audio>
+    <audio id="audioHappy" src="./1.mp3" loop></audio>
+    <audio id="audioPlayful" src="./1.mp3" loop></audio>
+
+    <!-- Copy notification -->
+    <div
+      id="copyToast"
+      style="
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.85);
+        color: white;
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-size: 14px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        z-index: 9999;
+      "
+    >
+      Message copied 💗 Paste it in Instagram DM
+    </div>
+
+    <!-- UNLOCK -->
+    <div
+      id="unlockScreen"
+      class="page bg-gradient-to-br from-pink-300 to-purple-400 z-50"
+    >
+      <button
+        id="startBtn"
+        class="bg-pink-500 text-white px-12 py-5 rounded-full text-xl shadow-2xl hover:scale-105"
+      >
+        Tap to Begin 💗
+      </button>
+    </div>
+
+    <!-- CONFESSION -->
+    <div
+      id="page-confession"
+      class="page hidden bg-gradient-to-br from-pink-100 to-purple-200"
+    >
+      <div class="glass max-w-md space-y-6">
+        <h1
+          id="confessText"
+          class="font-satisfy text-4xl md:text-5xl text-pink-700 glow caret"
+        ></h1>
+        <button
+          id="toQuestionBtn"
+          class="bg-emerald-500 text-white px-10 py-3 rounded-full hover:scale-105"
+        >
+          Next 💖
+        </button>
+      </div>
+    </div>
+
+    <!-- QUESTION -->
+    <div
+      id="page-question"
+      class="page bg-gradient-to-br from-pink-200 via-pink-300 to-purple-400"
+    >
+      <div class="glass max-w-md space-y-6">
+        <h1
+          id="qText"
+          class="font-satisfy text-4xl md:text-5xl text-pink-700 caret"
+        ></h1>
+        <p class="font-playfair text-lg md:text-xl text-pink-600">
+          Harseerat… you make my world brighter 🌸✨
+        </p>
+        <div id="playfulMsg"></div>
+        <div class="flex gap-4 justify-center flex-wrap">
+          <button
+            id="yesBtn"
+            class="bg-emerald-500 text-white px-10 py-3 rounded-full hover:scale-105"
+          >
+            Yes 💖
+          </button>
+          <button
+            id="noBtn"
+            class="bg-white/70 px-8 py-3 rounded-full hover:scale-105"
+          >
+            No 😢
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- YES -->
+    <div
+      id="page-yes"
+      class="page hidden bg-gradient-to-br from-green-200 to-emerald-500"
+    >
+      <div id="petalLayer" class="petal-layer"></div>
+      <div id="heartLayer" class="heart-layer"></div>
+      <div id="sparkLayer" class="spark-layer"></div>
+      <div id="bubbleLayer" class="bubble-layer"></div>
+      <div class="glass max-w-md space-y-6 z-10">
+        <h1 class="font-satisfy text-5xl md:text-6xl text-emerald-900 glow">
+          She said YES 💖
+        </h1>
+        <div
+          id="yesText"
+          class="font-playfair text-lg md:text-xl text-emerald-900 caret whitespace-pre-line glow"
+        ></div>
+        <button
+          id="continueBtn"
+          class="bg-white/70 px-8 py-3 rounded-full mt-4 hover:scale-105"
+        >
+          Continue 💫
+        </button>
+      </div>
+    </div>
+
+    <!-- PROMISE -->
+    <div
+      id="page-promise"
+      class="page hidden bg-gradient-to-br from-yellow-200 to-amber-400"
+    >
+      <div id="promiseHeartLayer" class="heart-layer"></div>
+      <div class="glass max-w-md space-y-6 z-10">
+        <h1 class="font-satisfy text-5xl md:text-6xl text-amber-900 glow">
+          A Promise 💞
+        </h1>
+        <div
+          id="promiseText"
+          class="font-playfair text-lg md:text-xl text-amber-900 glow caret whitespace-pre-line"
+        >
+          I promise to always cherish you 🌸<br />
+          Every moment, every day 💖
+        </div>
+        <button
+          id="toEndBtn"
+          class="bg-white/70 px-8 py-3 rounded-full mt-4 hover:scale-105"
+        >
+          Forever 💫
+        </button>
+      </div>
+    </div>
+
+    <!-- MEMORY -->
+    <div
+      id="page-memory"
+      class="page hidden bg-gradient-to-br from-rose-200 to-purple-300"
+    >
+      <div class="glass max-w-md space-y-6 z-10">
+        <h1 class="font-satisfy text-4xl md:text-5xl text-rose-800 glow">
+          A Small Thought
+        </h1>
+        <p
+          class="font-playfair text-lg md:text-xl text-rose-700 leading-relaxed"
+        >
+          Some people arrive quietly,<br />
+          and somehow stay.
+        </p>
+        <button
+          id="toNoteBtn"
+          class="bg-white/70 px-8 py-3 rounded-full mt-4 hover:scale-105"
+        >
+          Continue
+        </button>
+      </div>
+    </div>
+
+    <!-- NOTE -->
+    <div
+      id="page-note"
+      class="page hidden bg-gradient-to-br from-slate-800 via-purple-900 to-black"
+    >
+      <div class="glass max-w-md space-y-6 z-10">
+        <p
+          class="font-playfair text-lg md:text-xl text-gray-200 leading-relaxed"
+        >
+          Whatever this becomes,<br />
+          I’m glad it includes you.
+        </p>
+        <p class="font-satisfy text-2xl text-rose-400">— with warmth</p>
+        <button
+          id="toEndFromNoteBtn"
+          class="bg-white/70 px-8 py-3 rounded-full mt-4 hover:scale-105"
+        >
+          One last thing
+        </button>
+      </div>
+    </div>
+
+    <!-- MOMENTS -->
+    <div
+      id="page-moments"
+      class="page hidden bg-gradient-to-br from-pink-200 via-rose-300 to-purple-400"
+    >
+      <div class="glass max-w-md space-y-6 z-10">
+        <h1 class="font-satisfy text-4xl md:text-5xl text-rose-800 glow">
+          Little Moments
+        </h1>
+        <p
+          class="font-playfair text-lg md:text-xl text-rose-700 leading-relaxed"
+        >
+          The small laughs.<br />
+          The quiet pauses.<br />
+          The way time slows, just a bit.
+        </p>
+        <button
+          id="toFutureBtn"
+          class="bg-white/70 px-8 py-3 rounded-full mt-4 hover:scale-105"
+        >
+          And then…
+        </button>
+      </div>
+    </div>
+
+    <!-- FUTURE -->
+    <div
+      id="page-future"
+      class="page hidden bg-gradient-to-br from-emerald-200 to-teal-400"
+    >
+      <div class="glass max-w-md space-y-6 z-10">
+        <h1 class="font-satisfy text-4xl md:text-5xl text-emerald-900 glow">
+          Maybe Tomorrow
+        </h1>
+        <p
+          class="font-playfair text-lg md:text-xl text-emerald-900 leading-relaxed"
+        >
+          No promises of perfection.<br />
+          Just effort, honesty,<br />
+          and choosing each other—daily.
+        </p>
+        <button
+          id="toSilenceBtn"
+          class="bg-white/70 px-8 py-3 rounded-full mt-4 hover:scale-105"
+        >
+          One last pause
+        </button>
+      </div>
+    </div>
+
+    <!-- TIME -->
+    <div
+      id="page-time"
+      class="page hidden bg-gradient-to-br from-indigo-200 via-purple-300 to-pink-400"
+    >
+      <div class="glass max-w-md space-y-6 z-10">
+        <h1 class="font-satisfy text-4xl md:text-5xl text-purple-900 glow">
+          Time
+        </h1>
+
+        <p class="font-playfair text-lg text-purple-900">
+          We met in November 2021.
+        </p>
+
+        <p class="font-playfair text-lg text-purple-900">
+          Best friends since April 2022.
+        </p>
+
+        <p class="font-playfair text-lg text-purple-900">
+          Together as lovers since 15th May of 2025.
+        </p>
+
+        <div
+          id="timeCounter"
+          class="font-playfair text-xl text-purple-900 leading-relaxed"
+        ></div>
+
+        <button
+          id="toSilenceFromTimeBtn"
+          class="bg-white/70 px-8 py-3 rounded-full mt-4 hover:scale-105"
+        >
+          Continue
+        </button>
+      </div>
+    </div>
+
+    <!-- SILENCE -->
+    <div
+      id="page-silence"
+      class="page hidden bg-gradient-to-br from-black via-zinc-900 to-purple-950"
+    >
+      <div class="text-center max-w-md space-y-6 px-6">
+        <p
+          class="font-playfair text-lg md:text-xl text-gray-300 leading-relaxed"
+        >
+          Some feelings don’t need explaining.
+        </p>
+        <p
+          class="font-playfair text-lg md:text-xl text-gray-300 leading-relaxed"
+        >
+          They just need time.
+        </p>
+        <button
+          id="toEndFinalBtn"
+          class="bg-white/20 text-white px-8 py-3 rounded-full mt-6 hover:scale-105"
+        >
+          Finish
+        </button>
+      </div>
+    </div>
+
+    <!-- 100 PROMISES (EASTER EGG) -->
+    <div
+      id="page-promises"
+      class="page hidden bg-gradient-to-br from-black via-purple-950 to-zinc-900"
+    >
+      <!-- Content wrapper -->
+      <div class="relative max-w-2xl mx-auto px-5 py-10 space-y-8">
+        <!-- Ambient ring (symbolic, not boxy) -->
+        <div
+          id="promiseRing"
+          class="mx-auto text-center opacity-0 pointer-events-none select-none"
+        >
+          <div class="text-4xl md:text-5xl opacity-70">💍</div>
+          <p class="font-playfair text-pink-400 text-sm mt-1">
+            Not a question anymore.
+          </p>
+        </div>
+
+        <!-- Title -->
+        <h1
+          class="font-satisfy text-4xl md:text-5xl text-pink-300 glow text-center"
+        >
+          100 Promises
+        </h1>
+
+        <!-- Promises text (single natural scroll) -->
+        <div
+          id="promisesText"
+          class="font-playfair text-[15px] md:text-base text-pink-100 leading-[1.75] space-y-4"
+        >
+          <p class="promise-line">
+            ❤️ Idk mai kitne promise kar paunga aur kitne choot jayenge. Jo
+            choot gaye hain, woh baad mein bata dena. Okay my love.
+          </p>
+
+          <p class="promise-line">
+            ❤️ I promise I will love you, aur wo kabhi kam nahi hoga.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will never break your trust again.
+          </p>
+          <p class="promise-line">❤️ I promise never to cheat on you.</p>
+          <p class="promise-line">❤️ I promise I will never disappoint you.</p>
+          <p class="promise-line">❤️ I promise I will always love you.</p>
+          <p class="promise-line">
+            ❤️ I promise I will be at your side, chahe kuch bhi ho jaaye.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will steal you, chahe duniya mujhpe toot jaaye.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will make you happy, chahe kuch bhi ho jaaye.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will love you and make you all mine.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will love you emotionally, mentally, and physically.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will make your pain go away, chahe mujhe ulta hi kyun
+            na lage.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will love you like you are part of me.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will fight for you even if the whole world is against
+            us.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will praise you from inside to outside.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will never judge you with someone else, because you
+            are mine.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will never compare you with others.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will keep you safe from the storms of life.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will make you mine, forever.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will never bring my past to hurt you.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will love you even if I die.
+          </p>
+
+          <p class="promise-line">
+            ❤️ I promise I will always fall for your beauty, your smell, your
+            eyes, your lips, your body and your soul — because your body is a
+            part of you.
+          </p>
+
+          <p class="promise-line">
+            ❤️ I promise my first kiss is just for you.
+          </p>
+          <p class="promise-line">❤️ I promise my hug is just for you.</p>
+          <p class="promise-line">
+            ❤️ I promise if I ever touch you, I will ask first.
+          </p>
+
+          <p class="promise-line">
+            ❤️ I promise if we ever have sex, I will be gentle, caring, and
+            respectful — because I love you, not just desire you.
+          </p>
+
+          <p class="promise-line">❤️ I promise I will do aftercare, always.</p>
+          <p class="promise-line">
+            ❤️ I promise every intimacy will feel like the first time.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will kiss you with innocence, not lust.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise I will touch you with pure love.
+          </p>
+
+          <p class="promise-line">
+            ❤️ I promise I will love you on bad days and good days.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise to make you feel loved every single day.
+          </p>
+          <p class="promise-line">
+            ❤️ I promise to respect your space when you need it.
+          </p>
+          <p class="promise-line">❤️ I promise to never stop choosing you.</p>
+
+          <p class="promise-line">
+            ❤️ I promise that no matter what, I will marry you and choose you
+            every single day.
+          </p>
+
+          <p class="promise-line">
+            ❤️ I promise that every “I love you” I say is true.
+          </p>
+        </div>
+
+        <!-- Back button -->
+        <div class="pt-6 text-center">
+          <button
+            id="exitPromisesBtn"
+            class="bg-white/20 text-white px-8 py-3 rounded-full hover:scale-105"
+          >
+            Go back
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- END -->
+    <div
+      id="page-end"
+      class="page hidden bg-gradient-to-br from-purple-900 via-pink-900 to-black"
+    >
+      <div class="text-center max-w-md space-y-6 px-4">
+        <p
+          class="font-playfair text-lg md:text-xl text-gray-200 leading-relaxed glow"
+        >
+          From the moment I met you 💕<br />
+          I knew you were my everything 🌸
+        </p>
+        <p
+          class="font-playfair text-lg md:text-xl text-gray-200 leading-relaxed glow"
+        >
+          Not out of habit,<br />
+          but out of pure love 💖
+        </p>
+        <p class="font-satisfy text-2xl md:text-3xl text-pink-400 glow">
+          Always yours, Seerat 💗
+        </p>
+        <button
+          id="responseBtn"
+          class="bg-pink-500 text-white px-8 py-3 rounded-full flex items-center gap-2 mx-auto hover:scale-105"
+        >
+          Send My Love ❤️
+        </button>
+      </div>
+    </div>
+
+    <script>
+      window.onload = () => {
+        const startBtn = document.getElementById("startBtn");
+        const confessText = document.getElementById("confessText");
+        const qText = document.getElementById("qText");
+        const yesBtn = document.getElementById("yesBtn");
+        const noBtn = document.getElementById("noBtn");
+        const continueBtn = document.getElementById("continueBtn");
+        const responseBtn = document.getElementById("responseBtn");
+        const toQuestionBtn = document.getElementById("toQuestionBtn");
+        const toNoteBtn = document.getElementById("toNoteBtn");
+        const toEndFromNoteBtn = document.getElementById("toEndFromNoteBtn");
+        const toFutureBtn = document.getElementById("toFutureBtn");
+        const toSilenceBtn = document.getElementById("toSilenceBtn");
+        const timeCounter = document.getElementById("timeCounter");
+        const toSilenceFromTimeBtn = document.getElementById(
+          "toSilenceFromTimeBtn",
+        );
+        const exitPromisesBtn = document.getElementById("exitPromisesBtn");
+        const toEndFinalBtn = document.getElementById("toEndFinalBtn");
+        const toEndBtn = document.getElementById("toEndBtn");
+
+        const unlockScreen = document.getElementById("unlockScreen");
+        const yesText = document.getElementById("yesText");
+        const heartLayer = document.getElementById("heartLayer");
+        const sparkLayer = document.getElementById("sparkLayer");
+        const bubbleLayer = document.getElementById("bubbleLayer");
+        const petalLayer = document.getElementById("petalLayer");
+        const playfulMsg = document.getElementById("playfulMsg");
+
+        // ----------- SINGLE MUSIC SETUP -----------
+        const music = document.getElementById("audioHappy");
+        music.volume = 0;
+        music.loop = true;
+
+        function startMusic() {
+          // prevent restart if already playing
+          if (!music.paused) return;
+
+          const playPromise = music.play();
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                // fade-in for smooth start
+                let v = 0;
+                const fade = setInterval(() => {
+                  v += 0.03;
+                  music.volume = Math.min(v, 0.6);
+                  if (v >= 0.6) clearInterval(fade);
+                }, 120);
+              })
+              .catch((err) => console.log("Music blocked by browser:", err));
+          }
+        }
+
+        // ----------- PAGE NAVIGATION & TEXT TYPING -----------
+        let current = "question";
+        let noCount = 0;
+
+        function show(id, cb) {
+          document.getElementById("page-" + current).classList.add("hidden");
+          setTimeout(() => {
+            document.getElementById("page-" + id).classList.remove("hidden");
+            current = id;
+            if (cb) cb();
+          }, 400);
+        }
+
+        function typeText(el, lines) {
+          let l = 0,
+            i = 0;
+          el.textContent = "";
+          (function step() {
+            if (i < lines[l].length) {
+              el.textContent += lines[l][i++];
+              setTimeout(step, 70);
+            } else {
+              el.textContent += "\n";
+              l++;
+              i = 0;
+              if (l < lines.length) setTimeout(step, 600);
+            }
+          })();
+        }
+
+        // ----------- ANIMATION LAYERS -----------
+        function hearts() {
+          heartLayer.innerHTML = "";
+          for (let i = 0; i < 80; i++) {
+            const h = document.createElement("div");
+            h.className = "heart";
+            h.textContent = Math.random() > 0.5 ? "💗" : "💕";
+            h.style.left = Math.random() * 100 + "%";
+            h.style.animationDuration = 4 + Math.random() * 4 + "s";
+            heartLayer.appendChild(h);
+          }
+        }
+
+        function sparks() {
+          sparkLayer.innerHTML = "";
+          for (let i = 0; i < 50; i++) {
+            const s = document.createElement("div");
+            s.className = "spark";
+            s.textContent = "✨";
+            s.style.left = Math.random() * 100 + "%";
+            s.style.animationDuration = 2 + Math.random() * 2 + "s";
+            sparkLayer.appendChild(s);
+          }
+        }
+
+        function bubbles() {
+          bubbleLayer.innerHTML = "";
+          for (let i = 0; i < 30; i++) {
+            const b = document.createElement("div");
+            b.className = "bubble";
+            b.textContent = "💖";
+            b.style.left = Math.random() * 100 + "%";
+            b.style.animationDuration = 3 + Math.random() * 3 + "s";
+            bubbleLayer.appendChild(b);
+          }
+        }
+
+        function petals() {
+          petalLayer.innerHTML = "";
+          for (let i = 0; i < 20; i++) {
+            const p = document.createElement("div");
+            p.className = "petal";
+            p.textContent = "🌹";
+            p.style.left = Math.random() * 100 + "%";
+            p.style.animationDuration = 3 + Math.random() * 3 + "s";
+            petalLayer.appendChild(p);
+          }
+        }
+
+        // ----------- TIME COUNTER -----------
+        function updateTimeCounter() {
+          const metDate = new Date("2021-11-01");
+          const friendsDate = new Date("2022-04-01");
+          const proposalDate = new Date("2025-05-15"); // Proposal date
+          const now = new Date();
+
+          function diff(from, to) {
+            let years = to.getFullYear() - from.getFullYear();
+            let months = to.getMonth() - from.getMonth();
+            let days = to.getDate() - from.getDate();
+            if (days < 0) {
+              months--;
+              days += new Date(to.getFullYear(), to.getMonth(), 0).getDate();
+            }
+            if (months < 0) {
+              years--;
+              months += 12;
+            }
+            return { years, months, days };
+          }
+
+          const met = diff(metDate, now);
+          const friends = diff(friendsDate, now);
+          const proposed = diff(proposalDate, now);
+
+          timeCounter.innerHTML = `
+    <strong>Since we met:</strong><br/>
+    ${met.years} years, ${met.months} months, ${met.days} days<br/><br/>
+    <strong>As best friends:</strong><br/>
+    ${friends.years} years, ${friends.months} months, ${friends.days} days<br/><br/>
+    <strong>Since I proposed:</strong><br/>
+    ${proposed.years} years, ${proposed.months} months, ${proposed.days} days
+  `;
+        }
+
+        // ----------- BUTTON LOGIC -----------
+        startBtn.onclick = () => {
+          unlockScreen.style.display = "none";
+          startMusic(); // music starts once here
+          show("confession", () => {
+            typeText(confessText, [
+              "Seerat…",
+              "I have something to tell you… 💌",
+            ]);
+          });
+        };
+
+        toQuestionBtn.onclick = () => {
+          show("question");
+          typeText(qText, ["Seerat…", "Will you be my Valentine? 💌"]);
+        };
+
+        yesBtn.onclick = () => {
+          show("yes", () => {
+            hearts();
+            sparks();
+            bubbles();
+            petals();
+            typeText(yesText, [
+              "With you, every wish comes true 🌟",
+              "Every morning feels magical 🌸",
+              "Life begins with you 💖",
+            ]);
+          });
+        };
+
+        continueBtn.onclick = () =>
+          show("promise", () => {
+            hearts();
+            sparks();
+            bubbles();
+            petals();
+          });
+
+        toEndBtn.onclick = () => show("memory");
+        toNoteBtn.onclick = () => show("moments");
+        toFutureBtn.onclick = () => show("future");
+        toSilenceBtn.onclick = () => {
+          show("time");
+          updateTimeCounter();
+        };
+        toSilenceFromTimeBtn.onclick = () => show("silence");
+        exitPromisesBtn.onclick = () => show("question");
+        toEndFinalBtn.onclick = () => show("end");
+        toEndFromNoteBtn.onclick = () => show("end");
+
+        // ----------- PLAYFUL NO SYSTEM -----------
+        const playfulMessages = [
+          "Hmm… that No sounded shy, not serious 😉",
+          "You’re smiling right now, I know it 💗",
+          "Careful… every No is pulling you closer 😏",
+          "Okay but… your heart didn’t say No 💖",
+          "You’re pretending to resist and it’s adorable 🌸",
+          "At this point, we both know the answer 😌",
+          "Even your No feels like a Yes in disguise 💕",
+          "I’m already imagining us together 💭💖",
+          "Stop fighting it… you’re safe with me 🤍",
+          "There it is… the Yes you’re holding back 💗",
+        ];
+
+        noBtn.onclick = () => {
+          noCount++;
+          const parent = noBtn.parentElement;
+          const maxX = parent.offsetWidth - noBtn.offsetWidth;
+          const maxY = parent.offsetHeight - noBtn.offsetHeight;
+          const newX = Math.random() * maxX;
+          const newY = Math.random() * maxY;
+          noBtn.style.transform = `translate(${newX - noBtn.offsetLeft}px,${newY - noBtn.offsetTop}px)`;
+
+          for (let i = 0; i < 3; i++) {
+            const heart = document.createElement("div");
+            heart.className = "floating-heart";
+            heart.textContent = "💖";
+            const btnRect = yesBtn.getBoundingClientRect();
+            heart.style.left =
+              btnRect.left +
+              btnRect.width / 2 +
+              (Math.random() * 40 - 20) +
+              "px";
+            heart.style.top = btnRect.top + window.scrollY + "px";
+            heart.style.fontSize = 14 + Math.random() * 12 + "px";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 2000 + Math.random() * 1000);
+          }
+
+          if (noCount >= 11) {
+            // Remove No button completely
+            noBtn.style.display = "none";
+
+            // Change text to final line
+            playfulMsg.textContent = "There was never really a choice.";
+            playfulMsg.style.fontSize = "1.3rem";
+            playfulMsg.style.opacity = "0.9";
+
+            // Small pause so the line is felt
+            setTimeout(() => {
+              show("promises", () => {
+                const ring = document.getElementById("promiseRing");
+
+                setTimeout(() => {
+                  ring.classList.add("ring-soft");
+                  ring.style.opacity = "1";
+                }, 600);
+              });
+            }, 900);
+
+            return;
+          }
+
+          playfulMsg.textContent =
+            playfulMessages[Math.min(noCount - 1, playfulMessages.length - 1)];
+        };
+
+        // ----------- SEND LOVE BUTTON -----------
+        responseBtn.onclick = () => {
+          const msg =
+            "Yes… I am your Valentine 💗\n" +
+            "I choose you completely 💖\n\n" +
+            "— Seerat";
+
+          // ---------- HARD COPY (works everywhere) ----------
+          const textarea = document.createElement("textarea");
+          textarea.value = msg;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          textarea.style.left = "-9999px";
+
+          document.body.appendChild(textarea);
+          textarea.select();
+          textarea.setSelectionRange(0, textarea.value.length);
+
+          try {
+            document.execCommand("copy");
+          } catch (e) {}
+
+          document.body.removeChild(textarea);
+
+          // ---------- Show toast (no alerts) ----------
+          const toast = document.getElementById("copyToast");
+          toast.style.opacity = "1";
+
+          setTimeout(() => {
+            toast.style.opacity = "0";
+          }, 3000);
+
+          // ---------- Instagram open ----------
+          const appLink = "instagram://direct";
+          const webLink = "https://www.instagram.com/direct/inbox/";
+
+          let appOpened = false;
+          const visHandler = () => {
+            appOpened = true;
+            document.removeEventListener("visibilitychange", visHandler);
+          };
+          document.addEventListener("visibilitychange", visHandler);
+
+          // Try app
+          window.location.href = appLink;
+
+          // Fallback to web
+          setTimeout(() => {
+            if (!appOpened) {
+              window.open(webLink, "_blank");
+            }
+          }, 1200);
+        };
+      };
+    </script>
+  </body>
+</html>
